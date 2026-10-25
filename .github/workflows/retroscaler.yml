@@ -63,4 +63,4 @@ jobs:
           * `*_full.bin`: full flash image, flash at **0x0** (e.g. NodeMCU flasher default settings). Same layout as the RetroScaler images.
           * `*_app.bin`: app only, flash at **0x10000**.
 
-          Flashing a full image erases saved settings & BT pairings.
+          Saved settings, BT pairings & memory card data are kept when flashing either image.

@@ -11,7 +11,11 @@
 >
 > Changes compared to upstream BlueRetro:
 > * 4 BT status LEDs on GPIO 14, 32, 33 & 25: a LED turns on once the matching BT device is identified and off when it disconnects (`CONFIG_BLUERETRO_RETROSCALER_4LED`).
-> * Default accessories mode set to rumble (`CONFIG_BLUERETRO_DEFAULT_ACC_RUMBLE`).
+> * Default accessories mode set to rumble on all ports (`CONFIG_BLUERETRO_DEFAULT_ACC_RUMBLE`).
+>   * N64: each port starts with a Rumble Pak; BlueRetro's Rumble/Controller Pak toggle button (see the [wiki](https://github.com/darthcloud/BlueRetro/wiki)) switches it to a Controller Pak until the next reboot. Each port gets its own Controller Pak (4 x 32 KB).
+>   * Dreamcast: port 1 gets Jump Pack + VMU (`CONFIG_BLUERETRO_DEFAULT_ACC_P1_MEM`), ports 2-4 Jump Pack only, since all ports would share the same VMU data.
+>   * GameCube: rumble on all ports.
+> * These accessory defaults are applied once to the existing config at boot (`CONFIG_BLUERETRO_DEFAULT_ACC_APPLY_REV`), so no reset from the web config is needed. Other settings & mappings are kept, and accessories can still be changed afterwards in the web config.
 > * Build configs: `configs/hw1/n64_retroscaler`, `configs/hw1/dreamcast_retroscaler` & `configs/hw1/gamecube_retroscaler`.
 >
 > **Tested successfully** on the RetroScaler 4 ports N64, Dreamcast & GameCube adapters.
@@ -19,7 +23,7 @@
 > **Download:** prebuilt firmware is available on the [Releases](https://github.com/opssemnik/Blueretro-for-retroscaler-4port/releases) page.
 > * `*_full.bin` is a full flash image, the same layout as the RetroScaler images: flash it at **0x0** (e.g. NodeMCU flasher default settings).
 > * `*_app.bin` is the app only: flash it at **0x10000**. Flashing it at 0x0 overwrites the bootloader and the adapter won't boot.
-> * Flashing a full image erases saved settings & BT pairings.
+> * Saved settings, BT pairings & memory card data are kept when flashing either image (they are stored in a partition the images don't cover).
 >
 > **Build**, e.g. for N64: `cp configs/hw1/n64_retroscaler sdkconfig && idf.py reconfigure build` (ESP-IDF v5.4).
 > This produces both `build/BlueRetro.bin` (app, 0x10000) and `build/BlueRetro_full.bin` (full image, 0x0).
