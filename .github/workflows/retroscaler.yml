@@ -11,7 +11,7 @@ jobs:
   build:
     strategy:
       matrix:
-        br_config: [n64, dreamcast, gamecube]
+        br_config: [n64, dreamcast, gamecube, 3do, parallel_1p, parallel_2p, genesis, nes, snes, playstation, saturn]
     runs-on: ubuntu-latest
     container:
       image: espressif/idf:v5.4
@@ -58,7 +58,8 @@ jobs:
       with:
         files: dist/*
         body: |
-          RetroScaler 4 ports adapter firmware (N64, Dreamcast & GameCube).
+          RetroScaler BlueRetro adapter firmware: 4 ports (N64, Dreamcast & GameCube) and single port adapters.
+          See the README for which file to use for each adapter.
 
           * `*_full.bin`: full flash image, flash at **0x0** (e.g. NodeMCU flasher default settings). Same layout as the RetroScaler images.
           * `*_app.bin`: app only, flash at **0x10000**.
