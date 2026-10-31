@@ -81,29 +81,48 @@ jobs:
       with:
         path: dist
         merge-multiple: true
+    - name: Package zips
+      shell: bash
+      run: |
+        mkdir pc ota
+        for f in dist/*_full.bin; do cp "$f" "pc/$(basename "$f" _full.bin).bin"; done
+        for f in dist/*_app.bin; do cp "$f" "ota/$(basename "$f" _app.bin).bin"; done
+        printf '%s\n' \
+          'Full flash images for flashing from a PC.' \
+          'Flash the file for your adapter at address 0x0 (e.g. NodeMCU flasher default settings).' \
+          'Saved settings, BT pairings & memory card data are kept.' > pc/FLASHING.txt
+        printf '%s\n' \
+          'App images for the BlueRetro web config firmware update (OTA over Bluetooth).' \
+          'Select the file for your adapter in the web config OTA / firmware update page.' \
+          'To flash from a PC instead, use these at address 0x10000, or use the pc-flashing zip at 0x0.' > ota/FLASHING.txt
+        (cd pc && zip -q ../pc-flashing.zip *)
+        (cd ota && zip -q ../web-ota-flashing.zip *)
     - name: Create release
       uses: softprops/action-gh-release@v2
       with:
-        files: dist/*
+        files: |
+          pc-flashing.zip
+          web-ota-flashing.zip
         body: |
           RetroScaler BlueRetro adapters firmware, 4 port & 1 port versions.
 
           | Adapter | File |
           |---|---|
-          | N64 (4 port & 1 port) | `BlueRetro_hw1_n64_retroscaler_full.bin` |
-          | Dreamcast (4 port & 1 port) | `BlueRetro_hw1_dreamcast_retroscaler_full.bin` |
-          | GameCube (4 port & 1 port) | `BlueRetro_hw1_gamecube_retroscaler_full.bin` |
-          | 3DO | `BlueRetro_hw1_3do_retroscaler_full.bin` |
-          | Atari / SMS | `BlueRetro_hw1_parallel_2p_retroscaler_full.bin` |
-          | SNK (Neo Geo) | `BlueRetro_hw1_parallel_1p_neogeo_retroscaler_full.bin` |
-          | MD / Genesis | `BlueRetro_hw1_genesis_retroscaler_full.bin` |
-          | NES | `BlueRetro_hw1_nes_retroscaler_full.bin` |
-          | SNES | `BlueRetro_hw1_snes_retroscaler_full.bin` |
-          | PS1 / PS2 | `BlueRetro_hw1_playstation_retroscaler_full.bin` |
-          | Saturn | `BlueRetro_hw1_saturn_retroscaler_full.bin` |
+          | N64 (4 port & 1 port) | `BlueRetro_hw1_n64_retroscaler.bin` |
+          | Dreamcast (4 port & 1 port) | `BlueRetro_hw1_dreamcast_retroscaler.bin` |
+          | GameCube (4 port & 1 port) | `BlueRetro_hw1_gamecube_retroscaler.bin` |
+          | 3DO | `BlueRetro_hw1_3do_retroscaler.bin` |
+          | Atari / SMS | `BlueRetro_hw1_parallel_2p_retroscaler.bin` |
+          | SNK (Neo Geo) | `BlueRetro_hw1_parallel_1p_neogeo_retroscaler.bin` |
+          | MD / Genesis | `BlueRetro_hw1_genesis_retroscaler.bin` |
+          | NES | `BlueRetro_hw1_nes_retroscaler.bin` |
+          | SNES | `BlueRetro_hw1_snes_retroscaler.bin` |
+          | PS1 / PS2 | `BlueRetro_hw1_playstation_retroscaler.bin` |
+          | Saturn | `BlueRetro_hw1_saturn_retroscaler.bin` |
 
-          * `*_full.bin`: full flash image, flash at **0x0** (e.g. NodeMCU flasher default settings). Same layout as the RetroScaler images.
-          * `*_app.bin`: app only, flash at **0x10000**.
+          Both zips contain one `.bin` per adapter (same file names):
+          * **`pc-flashing.zip`**: full flash images for flashing from a PC. Flash at **0x0** (e.g. NodeMCU flasher default settings). Same layout as the RetroScaler images.
+          * **`web-ota-flashing.zip`**: app images for the BlueRetro web config firmware update (OTA over Bluetooth).
 
-          Saved settings, BT pairings & memory card data are kept when flashing either image.
+          Saved settings, BT pairings & memory card data are kept with either method.
           Default accessories are applied automatically on first boot (N64: Rumble Pak on all ports, Dreamcast: Jump Pack + VMU on port 1 & Jump Pack on ports 2-4, GameCube & PS1/PS2: rumble on all ports).

@@ -9,7 +9,7 @@
 > Built with ESP-IDF v5.4 on top of upstream commit `ddfc31b`, these changes reproduce the RetroScaler app images byte-for-byte (except build time, version string & hashes).
 > In this fork they are applied on top of the final upstream release.
 >
-> Which file to use (`BlueRetro_hw1_<config>_retroscaler_full.bin`):
+> Which file to use (`BlueRetro_hw1_<config>_retroscaler.bin`):
 >
 > | Adapter | `<config>` |
 > |---|---|
@@ -40,8 +40,8 @@
 > The single port changes reproduce RetroScaler's Atari/SMS, SNK, MD/Genesis, NES, PS1/PS2 & Saturn images byte-for-byte (3DO only differs by its unused default accessories setting).
 >
 > **Download:** prebuilt firmware is available on the [Releases](https://github.com/opssemnik/Blueretro-for-retroscaler-4port-1port/releases) page.
-> * `*_full.bin` is a full flash image, the same layout as the RetroScaler images: flash it at **0x0** (e.g. NodeMCU flasher default settings).
-> * `*_app.bin` is the app only: flash it at **0x10000**. Flashing it at 0x0 overwrites the bootloader and the adapter won't boot.
+> * **`pc-flashing.zip`**: full flash images, the same layout as the RetroScaler images. Flash at **0x0** (e.g. NodeMCU flasher default settings).
+> * **`web-ota-flashing.zip`**: app images for the BlueRetro web config firmware update (OTA over Bluetooth). From a PC, these go at **0x10000**; flashing them at 0x0 overwrites the bootloader and the adapter won't boot.
 > * Saved settings, BT pairings & memory card data are kept when flashing either image (they are stored in a partition the images don't cover).
 >
 > **Build**, e.g. for N64: `cp configs/hw1/n64_retroscaler sdkconfig && idf.py reconfigure build` (ESP-IDF v5.4).
