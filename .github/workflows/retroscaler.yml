@@ -7,11 +7,39 @@ on:
     branches: [ master ]
   workflow_dispatch:
 
+# One build per commit: a tag (release) run cancels a branch run of the same commit
+concurrency:
+  group: retroscaler-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: ${{ github.ref_type == 'tag' }}
+
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      skip: ${{ steps.check.outputs.skip }}
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Skip branch build if a release tag already builds this commit
+      id: check
+      shell: bash
+      run: |
+        if [ "${{ github.ref_type }}" = "branch" ] && git tag --points-at HEAD | grep -q '^v'; then
+          echo "skip=true" >> $GITHUB_OUTPUT
+        else
+          echo "skip=false" >> $GITHUB_OUTPUT
+        fi
+
   build:
+    needs: check
+    if: needs.check.outputs.skip != 'true'
     strategy:
+      fail-fast: false
       matrix:
-        br_config: [n64, dreamcast, gamecube, 3do, parallel_1p, parallel_2p, genesis, nes, snes, playstation, saturn]
+        br_config: [n64, dreamcast, gamecube, 3do, parallel_1p_neogeo, parallel_2p, genesis, nes, snes, playstation, saturn]
     runs-on: ubuntu-latest
     container:
       image: espressif/idf:v5.4
@@ -58,10 +86,24 @@ jobs:
       with:
         files: dist/*
         body: |
-          RetroScaler BlueRetro adapter firmware: 4 ports (N64, Dreamcast & GameCube) and single port adapters.
-          See the README for which file to use for each adapter.
+          RetroScaler BlueRetro adapters firmware, 4 port & 1 port versions.
+
+          | Adapter | File |
+          |---|---|
+          | N64 (4 port & 1 port) | `BlueRetro_hw1_n64_retroscaler_full.bin` |
+          | Dreamcast (4 port & 1 port) | `BlueRetro_hw1_dreamcast_retroscaler_full.bin` |
+          | GameCube (4 port & 1 port) | `BlueRetro_hw1_gamecube_retroscaler_full.bin` |
+          | 3DO | `BlueRetro_hw1_3do_retroscaler_full.bin` |
+          | Atari / SMS | `BlueRetro_hw1_parallel_2p_retroscaler_full.bin` |
+          | SNK (Neo Geo) | `BlueRetro_hw1_parallel_1p_neogeo_retroscaler_full.bin` |
+          | MD / Genesis | `BlueRetro_hw1_genesis_retroscaler_full.bin` |
+          | NES | `BlueRetro_hw1_nes_retroscaler_full.bin` |
+          | SNES | `BlueRetro_hw1_snes_retroscaler_full.bin` |
+          | PS1 / PS2 | `BlueRetro_hw1_playstation_retroscaler_full.bin` |
+          | Saturn | `BlueRetro_hw1_saturn_retroscaler_full.bin` |
 
           * `*_full.bin`: full flash image, flash at **0x0** (e.g. NodeMCU flasher default settings). Same layout as the RetroScaler images.
           * `*_app.bin`: app only, flash at **0x10000**.
 
           Saved settings, BT pairings & memory card data are kept when flashing either image.
+          Default accessories are applied automatically on first boot (N64: Rumble Pak on all ports, Dreamcast: Jump Pack + VMU on port 1 & Jump Pack on ports 2-4, GameCube & PS1/PS2: rumble on all ports).

@@ -1,5 +1,5 @@
 > [!WARNING]
-> **Unofficial fork: RetroScaler BlueRetro adapters support**
+> **Unofficial fork: RetroScaler BlueRetro 4 port & 1 port adapters support**
 >
 > This fork adds support for the RetroScaler BlueRetro adapters: the 4 ports versions (N64, Dreamcast & GameCube with 4 BT LEDs) and the single port versions.
 > It is not affiliated with, endorsed by or supported by the original BlueRetro author or by RetroScaler.
@@ -18,7 +18,7 @@
 > | GameCube (4 ports & single port) | `gamecube` |
 > | 3DO | `3do` |
 > | Atari / SMS | `parallel_2p` |
-> | SNK (Neo Geo) | `parallel_1p` |
+> | SNK (Neo Geo) | `parallel_1p_neogeo` |
 > | MD / Genesis | `genesis` |
 > | NES | `nes` |
 > | SNES | `snes` |
@@ -39,7 +39,7 @@
 > **Tested successfully** on the RetroScaler 4 ports N64, Dreamcast & GameCube adapters and on the single port adapters.
 > The single port changes reproduce RetroScaler's Atari/SMS, SNK, MD/Genesis, NES, PS1/PS2 & Saturn images byte-for-byte (3DO only differs by its unused default accessories setting).
 >
-> **Download:** prebuilt firmware is available on the [Releases](https://github.com/opssemnik/Blueretro-for-retroscaler-4port/releases) page.
+> **Download:** prebuilt firmware is available on the [Releases](https://github.com/opssemnik/Blueretro-for-retroscaler-4port-1port/releases) page.
 > * `*_full.bin` is a full flash image, the same layout as the RetroScaler images: flash it at **0x0** (e.g. NodeMCU flasher default settings).
 > * `*_app.bin` is the app only: flash it at **0x10000**. Flashing it at 0x0 overwrites the bootloader and the adapter won't boot.
 > * Saved settings, BT pairings & memory card data are kept when flashing either image (they are stored in a partition the images don't cover).
