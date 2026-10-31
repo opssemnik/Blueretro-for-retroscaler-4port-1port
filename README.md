@@ -36,8 +36,8 @@
 > * These accessory defaults are applied once to the existing config at boot (`CONFIG_BLUERETRO_DEFAULT_ACC_APPLY_REV`), so no reset from the web config is needed. Other settings & mappings are kept, and accessories can still be changed afterwards in the web config.
 > * Build configs: `configs/hw1/<config>_retroscaler` (see table above).
 >
-> **Tested successfully** on the RetroScaler 4 ports N64, Dreamcast & GameCube adapters.
-> The single port changes reproduce RetroScaler's Atari/SMS, SNK, MD/Genesis, NES, PS1/PS2 & Saturn images byte-for-byte (3DO only differs by its unused default accessories setting), but the single port builds have not been tested on hardware by the fork maintainer yet.
+> **Tested successfully** on the RetroScaler 4 ports N64, Dreamcast & GameCube adapters and on the single port adapters.
+> The single port changes reproduce RetroScaler's Atari/SMS, SNK, MD/Genesis, NES, PS1/PS2 & Saturn images byte-for-byte (3DO only differs by its unused default accessories setting).
 >
 > **Download:** prebuilt firmware is available on the [Releases](https://github.com/opssemnik/Blueretro-for-retroscaler-4port/releases) page.
 > * `*_full.bin` is a full flash image, the same layout as the RetroScaler images: flash it at **0x0** (e.g. NodeMCU flasher default settings).
